@@ -258,6 +258,7 @@ function validateWorkflowSecurity(workflowsDir = DEFAULT_WORKFLOWS_DIR) {
         `ERROR: ${path.basename(violation.filePath)}:${violation.line} - ${violation.description}`,
       );
       console.error(`  Unsafe expression: ${violation.expression}`);
+      console.error(`::error file=${violation.filePath},line=${violation.line}::${violation.description}. Unsafe expression: ${violation.expression}`);
     }
     return 1;
   }
