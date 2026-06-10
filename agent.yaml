@@ -135,6 +135,7 @@ skills:
   - santa-method
   - search-first
   - security-review
+  - security-gatekeeper
   - security-scan
   - skill-comply
   - skill-stocktake
@@ -233,6 +234,7 @@ commands:
   - santa-loop
   - save-session
   - security-scan
+  - security-gate
   - sessions
   - setup-pm
   - skill-create
