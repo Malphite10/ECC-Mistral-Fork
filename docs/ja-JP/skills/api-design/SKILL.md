@@ -299,11 +299,11 @@ GET /api/v1/orders?fields=id,total,status&include=customer.name
 ```
 # Authorization ヘッダー内のベアラー トークン
 GET /api/v1/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
 
 # API キー（サーバー間）
 GET /api/v1/data
-X-API-Key: sk_live_abc123
+X-API-Key: YOUR_API_KEY
 ```
 
 ### 認可パターン

@@ -299,11 +299,11 @@ GET /api/v1/orders?fields=id,total,status&include=customer.name
 ```
 # Authorization header'da Bearer token
 GET /api/v1/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
 
 # API key (sunucudan sunucuya)
 GET /api/v1/data
-X-API-Key: sk_live_abc123
+X-API-Key: YOUR_API_KEY
 ```
 
 ### Yetkilendirme Kalıpları
