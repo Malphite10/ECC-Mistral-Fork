@@ -1,0 +1,21 @@
+name: AI Threat Model Analyzer
+
+on:
+  pull_request:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract diff
+        run: git diff origin/${{ github.base_ref }} > diff.txt
+
+      - name: Risk classification
+        run: |
+          echo "Analyzing risk level..."
+          if grep -Ei "crypto|auth|signature|token|key" diff.txt; then
+            echo "HIGH RISK CHANGE DETECTED"
+          fi
