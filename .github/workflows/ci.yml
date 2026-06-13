@@ -1,5 +1,7 @@
 name: CI
 
+PR → ci.yml → reusable-test → reusable-validate → merge
+
 on:
   push:
     branches: [main, 'release/**']
