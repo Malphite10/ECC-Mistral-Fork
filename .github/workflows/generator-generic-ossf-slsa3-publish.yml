@@ -10,6 +10,40 @@
 # The provenance file can be verified using https://github.com/slsa-framework/slsa-verifier.
 # For more information about SLSA and how it improves the supply-chain, visit slsa.dev.
 
+name: SLSA3 Provenance Build
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build artifact
+        run: npm run build || echo "No build step"
+
+      - name: Generate SLSA provenance
+        uses: slsa-framework/slsa-github-generator@v2.0.0
+        with:
+          upload-assets: true
+
+
 name: SLSA generic generator workflow #1
 on:
   workflow_dispatch:
@@ -27,12 +61,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/
+
         with:
           persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        uses: actions/
         with:
           node-version: '20.x'
 
