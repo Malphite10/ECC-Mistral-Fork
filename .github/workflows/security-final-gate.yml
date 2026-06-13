@@ -1,0 +1,24 @@
+name: Security Final Gate
+
+on: [pull_request]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Block secrets
+        run: |
+          if grep -R "ghp_\|sk-\|AKIA\|xoxb\|xoxp" .; then
+            echo "SECRET DETECTED"
+            exit 1
+          fi
+
+      - name: Block dangerous execution
+        run: |
+          if grep -R "eval(\|exec(\|rm -rf\|child_process" .; then
+            echo "DANGEROUS CODE DETECTED"
+            exit 1
+          fi
