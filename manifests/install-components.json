@@ -181,7 +181,7 @@
     {
       "id": "capability:prediction-markets",
       "family": "capability",
-      "description": "Public, non-advisory prediction-market and Itô basket research workflows with gated Itô API access.",
+      "description": "Public, non-advisory prediction-market and It\u00f4 basket research workflows with gated It\u00f4 API access.",
       "modules": [
         "prediction-market-skills"
       ]
@@ -205,9 +205,10 @@
     {
       "id": "capability:orchestration",
       "family": "capability",
-      "description": "Worktree and tmux orchestration runtime and workflow docs.",
+      "description": "Orchestrated development workflows (orch-*) and runtime for worktrees and tmux, featuring human-in-the-loop gates.",
       "modules": [
-        "orchestration"
+        "orchestration",
+        "workflow-quality"
       ]
     },
     {

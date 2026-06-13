@@ -109,6 +109,12 @@ skills:
   - perl-testing
   - plankton-code-quality
   - plan-orchestrate
+  - orch-add-feature
+  - orch-build-mvp
+  - orch-change-feature
+  - orch-fix-defect
+  - orch-pipeline
+  - orch-refine-code
   - postgres-patterns
   - product-lens
   - production-scheduling
@@ -201,11 +207,6 @@ commands:
   - multi-frontend
   - multi-plan
   - multi-workflow
-  - orch-add-feature
-  - orch-build-mvp
-  - orch-change-feature
-  - orch-fix-defect
-  - orch-refine-code
   - plan
   - plan-prd
   - pm2

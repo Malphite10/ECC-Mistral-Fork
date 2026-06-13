@@ -1025,7 +1025,7 @@ impl StateStore {
                 profile.permission_mode,
                 add_dirs_json,
                 profile.max_budget_usd,
-                profile.token_budget.map(|tokens| tokens as i64),
+                profile.token_budget,
                 profile.append_system_prompt,
             ],
         )?;
@@ -1062,9 +1062,7 @@ impl StateStore {
                         permission_mode: row.get(4)?,
                         add_dirs: serde_json::from_str(&add_dirs_json).unwrap_or_default(),
                         max_budget_usd: row.get(6)?,
-                        token_budget: row
-                            .get::<_, Option<i64>>(7)?
-                            .map(|tokens| tokens as u64),
+                        token_budget: row.get(7)?,
                         append_system_prompt: row.get(8)?,
                         agent: None,
                     })
@@ -1570,12 +1568,12 @@ impl StateStore {
                  updated_at = ?8
              WHERE id = ?9",
             rusqlite::params![
-                metrics.input_tokens as i64,
-                metrics.output_tokens as i64,
-                metrics.tokens_used as i64,
-                metrics.tool_calls as i64,
+                metrics.input_tokens,
+                metrics.output_tokens,
+                metrics.tokens_used,
+                metrics.tool_calls,
                 metrics.files_changed,
-                metrics.duration_secs as i64,
+                metrics.duration_secs,
                 metrics.cost_usd,
                 chrono::Utc::now().to_rfc3339(),
                 session_id,
@@ -1598,7 +1596,7 @@ impl StateStore {
                     row.get::<_, String>(1)?,
                     row.get::<_, String>(2)?,
                     row.get::<_, String>(3)?,
-                    row.get::<_, i64>(4)? as u64,
+                    row.get::<_, u64>(4)?,
                 ))
             })?
             .collect::<std::result::Result<Vec<_>, _>>()?;
@@ -1628,7 +1626,7 @@ impl StateStore {
             if duration_secs != current_duration {
                 self.conn.execute(
                     "UPDATE sessions SET duration_secs = ?1 WHERE id = ?2",
-                    rusqlite::params![duration_secs as i64, session_id],
+                    rusqlite::params![duration_secs, session_id],
                 )?;
             }
         }
@@ -1708,11 +1706,11 @@ impl StateStore {
                      cost_usd = ?4
                  WHERE id = ?5",
                 rusqlite::params![
-                    aggregate.input_tokens as i64,
-                    aggregate.output_tokens as i64,
+                    aggregate.input_tokens,
+                    aggregate.output_tokens,
                     aggregate
                         .input_tokens
-                        .saturating_add(aggregate.output_tokens) as i64,
+                        .saturating_add(aggregate.output_tokens),
                     aggregate.cost_usd,
                     session_id,
                 ],
@@ -1873,7 +1871,7 @@ impl StateStore {
                     row.input_params_json,
                     row.output_summary,
                     trigger_summary,
-                    row.duration_ms as i64,
+                    row.duration_ms,
                     risk_score,
                     timestamp,
                     file_paths_json,
@@ -2137,12 +2135,12 @@ impl StateStore {
                         })
                         .with_timezone(&chrono::Utc),
                     metrics: SessionMetrics {
-                        input_tokens: row.get::<_, i64>(11)? as u64,
-                        output_tokens: row.get::<_, i64>(12)? as u64,
-                        tokens_used: row.get::<_, i64>(13)? as u64,
-                        tool_calls: row.get::<_, i64>(14)? as u64,
+                        input_tokens: row.get(11)?,
+                        output_tokens: row.get(12)?,
+                        tokens_used: row.get(13)?,
+                        tool_calls: row.get(14)?,
                         files_changed: row.get(15)?,
-                        duration_secs: row.get::<_, i64>(16)? as u64,
+                        duration_secs: row.get(16)?,
                         cost_usd: row.get(17)?,
                     },
                 })
@@ -3815,7 +3813,7 @@ impl StateStore {
                 input_params_json,
                 output_summary,
                 trigger_summary,
-                duration_ms as i64,
+                duration_ms,
                 risk_score,
                 timestamp,
             ],
@@ -3844,11 +3842,11 @@ impl StateStore {
         let page = page.max(1);
         let offset = (page - 1) * page_size;
 
-        let total = self.conn.query_row(
+        let total: u64 = self.conn.query_row(
             "SELECT COUNT(*) FROM tool_log WHERE session_id = ?1",
             rusqlite::params![session_id],
-            |row| row.get::<_, i64>(0),
-        )? as u64;
+            |row| row.get(0),
+        )?;
 
         let mut stmt = self.conn.prepare(
             "SELECT id, session_id, tool_name, input_summary, input_params_json, output_summary, trigger_summary, duration_ms, risk_score, timestamp
@@ -3859,9 +3857,7 @@ impl StateStore {
         )?;
 
         let entries = stmt
-            .query_map(
-                rusqlite::params![session_id, page_size as i64, offset as i64],
-                |row| {
+            .query_map(rusqlite::params![session_id, page_size, offset], |row| {
                 Ok(ToolLogEntry {
                     id: row.get(0)?,
                     session_id: row.get(1)?,
@@ -3872,7 +3868,7 @@ impl StateStore {
                         .unwrap_or_else(|| "{}".to_string()),
                     output_summary: row.get::<_, Option<String>>(5)?.unwrap_or_default(),
                     trigger_summary: row.get::<_, Option<String>>(6)?.unwrap_or_default(),
-                    duration_ms: row.get::<_, Option<i64>>(7)?.unwrap_or_default() as u64,
+                    duration_ms: row.get::<_, Option<u64>>(7)?.unwrap_or_default(),
                     risk_score: row.get::<_, Option<f64>>(8)?.unwrap_or_default(),
                     timestamp: row.get(9)?,
                 })
@@ -3907,7 +3903,7 @@ impl StateStore {
                         .unwrap_or_else(|| "{}".to_string()),
                     output_summary: row.get::<_, Option<String>>(5)?.unwrap_or_default(),
                     trigger_summary: row.get::<_, Option<String>>(6)?.unwrap_or_default(),
-                    duration_ms: row.get::<_, Option<i64>>(7)?.unwrap_or_default() as u64,
+                    duration_ms: row.get::<_, Option<u64>>(7)?.unwrap_or_default(),
                     risk_score: row.get::<_, Option<f64>>(8)?.unwrap_or_default(),
                     timestamp: row.get(9)?,
                 })
@@ -6633,7 +6629,7 @@ mod tests {
                 "{}",
                 "updated file",
                 "context graph",
-                0i64,
+                0u64,
                 0.0f64,
                 "2026-04-10T00:01:00Z",
                 "[\"src/backfill.rs\"]",

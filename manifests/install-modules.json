@@ -469,7 +469,7 @@
     {
       "id": "prediction-market-skills",
       "kind": "skills",
-      "description": "Public, non-advisory prediction-market and Itô basket research workflows with gated Itô API access.",
+      "description": "Public, non-advisory prediction-market and It\u00f4 basket research workflows with gated It\u00f4 API access.",
       "paths": [
         "skills/ito-basket-compare",
         "skills/ito-data-atlas-agent",
@@ -567,7 +567,13 @@
         "scripts/orchestrate-codex-worker.sh",
         "scripts/orchestrate-worktrees.js",
         "scripts/orchestration-status.js",
-        "skills/dmux-workflows"
+        "skills/dmux-workflows",
+        "skills/orch-add-feature",
+        "skills/orch-build-mvp",
+        "skills/orch-change-feature",
+        "skills/orch-fix-defect",
+        "skills/orch-pipeline",
+        "skills/orch-refine-code"
       ],
       "targets": [
         "claude",

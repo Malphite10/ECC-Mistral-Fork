@@ -28,40 +28,20 @@ const EXCLUDED_PATTERNS = [
 
 const MAX_STDIN = 1024 * 1024; // 1MB limit
 let data = '';
-let truncated = false;
 process.stdin.setEncoding('utf8');
 
 process.stdin.on('data', chunk => {
   if (data.length < MAX_STDIN) {
     const remaining = MAX_STDIN - data.length;
     data += chunk.substring(0, remaining);
-    if (chunk.length > remaining) truncated = true;
-  } else {
-    truncated = true;
   }
 });
-
-/**
- * Echo stdin back (ECC pass-through convention), then exit once the pipe has
- * flushed. Truncated stdin is never echoed: a JSON document cut mid-stream is
- * reported by the harness as a Stop hook JSON validation failure (#2090).
- */
-function passThroughAndExit() {
-  if (truncated) {
-    log('[Hook] check-console-log: stdin exceeded 1MB; suppressing pass-through (fail-open)');
-    process.exit(0);
-  }
-  if (!data) {
-    process.exit(0);
-  }
-  process.stdout.write(data, () => process.exit(0));
-}
 
 process.stdin.on('end', () => {
   try {
     if (!isGitRepo()) {
-      passThroughAndExit();
-      return;
+      process.stdout.write(data);
+      process.exit(0);
     }
 
     const files = getGitModifiedFiles(['\\.tsx?$', '\\.jsx?$'])
@@ -85,6 +65,7 @@ process.stdin.on('end', () => {
     log(`[Hook] check-console-log error: ${err.message}`);
   }
 
-  // Always output the original data (unless truncated)
-  passThroughAndExit();
+  // Always output the original data
+  process.stdout.write(data);
+  process.exit(0);
 });

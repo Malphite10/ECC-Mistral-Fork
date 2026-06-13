@@ -128,22 +128,12 @@ function sumUsageFromTranscript(transcriptPath) {
   return { inputTokens, outputTokens, cacheWriteTokens, cacheReadTokens, model };
 }
 
-// 1MB, matching the other Stop hooks. The Stop payload carries
-// last_assistant_message, which routinely exceeded the old 64KB cap and
-// made this hook echo a JSON document cut mid-stream (#2090).
-const MAX_STDIN = 1024 * 1024;
+const MAX_STDIN = 64 * 1024;
 let raw = '';
-let truncated = false;
 
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', chunk => {
-  if (raw.length < MAX_STDIN) {
-    const remaining = MAX_STDIN - raw.length;
-    raw += chunk.substring(0, remaining);
-    if (chunk.length > remaining) truncated = true;
-  } else {
-    truncated = true;
-  }
+  if (raw.length < MAX_STDIN) raw += chunk.substring(0, MAX_STDIN - raw.length);
 });
 
 process.stdin.on('end', () => {
@@ -211,11 +201,6 @@ process.stdin.on('end', () => {
     // Non-blocking — never fail the Stop hook.
   }
 
-  // Pass stdin through (ECC hook convention) — but never echo truncated
-  // stdin: invalid JSON on stdout is reported as a Stop hook failure (#2090).
-  if (truncated) {
-    process.stderr.write('[Hook] cost-tracker: stdin exceeded 1MB; suppressing pass-through (fail-open)\n');
-    return;
-  }
+  // Pass stdin through (required by ECC hook convention).
   process.stdout.write(raw);
 });
