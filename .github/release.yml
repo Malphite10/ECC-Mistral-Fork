@@ -1,20 +1,33 @@
 changelog:
   categories:
-    - title: Core Harness
+    - title:  Features
       labels:
-        - enhancement
         - feature
-    - title: Reliability & Bug Fixes
+        - enhancement
+
+    - title:  Bug Fixes
       labels:
         - bug
         - fix
-    - title: Docs & Guides
+
+    - title:  Security
       labels:
-        - docs
-    - title: Tooling & CI
+        - security
+
+    - title:  Dependencies
       labels:
-        - ci
+        - dependencies
+
+    - title:  Maintenance
+      labels:
         - chore
+        - maintenance
+
+    - title: 
+ Documentation
+      labels:
+        - documentation
+
   exclude:
     labels:
       - skip-changelog
