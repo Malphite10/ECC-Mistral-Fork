@@ -1,13 +1,19 @@
 name: CI
 
-PR → ci.yml → reusable-test → reusable-validate → merge
+jobs:
+  test:
+    uses: ./.github/workflows/reusable-test.yml
+
+  validate:
+    uses: ./.github/workflows/reusable-validate.yml
+
 
 on:
   push:
     branches: [main, 'release/**']
     tags: ['v*']
   pull_request:
-    branches: [main]
+    branches: [v2.0]
 
 # Prevent duplicate runs
 concurrency:
