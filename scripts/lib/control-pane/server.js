@@ -15,7 +15,12 @@ function usage() {
     '  node scripts/control-pane.js [--host 127.0.0.1] [--port 8765] [--db <ecc2.db>] [--state-db <state.db>] [--config <ecc2.toml>] [--query <text>]',
     '',
     'Options:',
+    '  --host <addr>      Host to bind the server to (default: 127.0.0.1)',
+    '  --port <number>    Port to listen on (default: 8765)',
+    '  --db <path>        Path to the ECC2 SQLite database',
     '  --state-db <path>  Read agent work items from an ECC state-store database',
+    '  --config <path>    Path to an ECC2 TOML configuration file',
+    '  --query <text>     Initial knowledge recall query',
     '  --read-only        Disable action execution endpoints',
     '  --no-open          Do not open a browser after the server starts',
     '  --help             Show this help',
@@ -214,12 +219,32 @@ function createControlPaneServer(options = {}) {
           return;
         }
 
-        const body = await readRequestJson(req);
-        const action = buildControlPaneAction(decodeURIComponent(actionMatch[1]), {
-          repoRoot,
-          query: body.query || baseQuery,
-          limit: body.limit || 25,
-        });
+        let body;
+        try {
+          body = await readRequestJson(req);
+        } catch (error) {
+          sendJson(res, 500, {
+            ok: false,
+            error: error.message,
+          });
+          return;
+        }
+
+        const actionId = decodeURIComponent(actionMatch[1]);
+        let action;
+        try {
+          action = buildControlPaneAction(actionId, {
+            repoRoot,
+            query: body.query || baseQuery,
+            limit: body.limit || 25,
+          });
+        } catch (error) {
+           sendJson(res, 500, {
+            ok: false,
+            error: error.message,
+          });
+          return;
+        }
 
         if (!action.executable) {
           sendJson(res, 400, {
