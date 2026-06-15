@@ -1,15 +1,15 @@
 # Security Policy
 
+Security fixes land on `main` first. Backports are best-effort and only for currently supported release lines.
+
 ## Supported Versions
 
-| Version | Supported |
-| --- | --- |
-| 2.x / builds | :white_check_mark: |
-| 1.10.x | :white_check_mark: |
-| 1.9.x | Critical fixes only |
-| < 1.9 | :x: |
-
-Security fixes land on `main` first. Backports are best-effort and only for currently supported release lines.
+upported Versions
+Version	Supported
+2.x / rc builds	:white_check_mark:
+1.10.x	:white_check_mark:
+1.9.x	Critical fixes only
+< 1.9	:x:
 
 ## Reporting a Vulnerability
 
