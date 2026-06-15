@@ -1,5 +1,7 @@
 
 
+"""Interactive CLI for selecting LLM providers and models."""
+
 from __future__ import annotations
 
 import os
@@ -8,6 +10,8 @@ from enum import Enum
 
 
 class Color(str, Enum):
+    """ANSI color codes for CLI output."""
+
     RESET = "\033[0m"
     BOLD = "\033[1m"
     GREEN = "\033[92m"
@@ -17,6 +21,7 @@ class Color(str, Enum):
 
 
 def print_banner() -> None:
+    """Print the application banner."""
     banner = f"""{Color.CYAN}
 ╔═══════════════════════════════════════════╗
 ║   LLM Provider Selector                   ║
@@ -26,12 +31,14 @@ def print_banner() -> None:
 
 
 def print_providers(providers: list[tuple[str, str]]) -> None:
+    """Print a list of available providers."""
     print(f"\n{Color.BOLD}Available Providers:{Color.RESET}\n")
     for i, (name, desc) in enumerate(providers, 1):
         print(f"  {Color.GREEN}{i}{Color.RESET}. {Color.BOLD}{name}{Color.RESET} - {desc}")
 
 
 def select_provider(providers: list[tuple[str, str]]) -> str | None:
+    """Prompt the user to select a provider from a list."""
     if not providers:
         print("No providers available.")
         return None
@@ -52,6 +59,7 @@ def select_provider(providers: list[tuple[str, str]]) -> str | None:
 
 
 def select_model(models: list[tuple[str, str]]) -> str | None:
+    """Prompt the user to select a model from a list."""
     if not models:
         print("No models available.")
         return None
@@ -74,6 +82,7 @@ def select_model(models: list[tuple[str, str]]) -> str | None:
 
 
 def save_config(provider: str, model: str, persist: bool = False) -> None:
+    """Save the selected provider and model to a configuration file."""
     config = f"LLM_PROVIDER={provider}\nLLM_MODEL={model}\n"
     env_file = ".llm.env"
 
@@ -93,6 +102,7 @@ def interactive_select(
     models_per_provider: dict[str, list[tuple[str, str]]] | None = None,
     persist: bool = False,
 ) -> tuple[str, str] | None:
+    """Run the interactive selection process for provider and model."""
     print_banner()
 
     if providers is None:
@@ -139,6 +149,7 @@ def interactive_select(
 
 
 def main() -> None:
+    """CLI entry point for provider selection."""
     result = interactive_select(persist=True)
 
     if result:

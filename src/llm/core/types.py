@@ -8,6 +8,8 @@ from typing import Any
 
 
 class Role(str, Enum):
+    """Message roles in a conversation."""
+
     SYSTEM = "system"
     USER = "user"
     ASSISTANT = "assistant"
@@ -15,6 +17,8 @@ class Role(str, Enum):
 
 
 class ProviderType(str, Enum):
+    """Supported LLM provider types."""
+
     CLAUDE = "claude"
     OPENAI = "openai"
     OLLAMA = "ollama"
@@ -24,6 +28,8 @@ class ProviderType(str, Enum):
 
 @dataclass(frozen=True)
 class Message:
+    """A message in a conversation with an LLM."""
+
     role: Role
     content: str
     name: str | None = None
@@ -46,6 +52,8 @@ class Message:
 
 @dataclass(frozen=True)
 class ToolDefinition:
+    """Definition of a tool that can be called by an LLM."""
+
     name: str
     description: str
     parameters: dict[str, Any]
@@ -80,6 +88,8 @@ class ToolDefinition:
 
 @dataclass(frozen=True)
 class ToolCall:
+    """Represents a request from an LLM to call a tool."""
+
     id: str
     name: str
     arguments: dict[str, Any]
@@ -87,6 +97,8 @@ class ToolCall:
 
 @dataclass(frozen=True)
 class ToolResult:
+    """Represents the result of a tool execution."""
+
     tool_call_id: str
     content: str
     is_error: bool = False
@@ -94,6 +106,8 @@ class ToolResult:
 
 @dataclass(frozen=True)
 class LLMInput:
+    """Input parameters for an LLM generation request."""
+
     messages: list[Message]
     model: str | None = None
     temperature: float = 1.0
@@ -119,6 +133,8 @@ class LLMInput:
 
 @dataclass(frozen=True)
 class LLMOutput:
+    """Output results from an LLM generation request."""
+
     content: str
     tool_calls: list[ToolCall] | None = None
     model: str | None = None
@@ -148,6 +164,8 @@ class LLMOutput:
 
 @dataclass(frozen=True)
 class ModelInfo:
+    """Information about a specific LLM model."""
+
     name: str
     provider: ProviderType
     supports_tools: bool = True

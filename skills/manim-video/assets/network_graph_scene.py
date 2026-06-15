@@ -1,7 +1,11 @@
+"""Manim scene for explaining network graph optimization."""
+
 from manim import DOWN, LEFT, RIGHT, UP, Circle, Create, FadeIn, FadeOut, Scene, Text, VGroup, CurvedArrow
 
 
 class NetworkGraphExplainer(Scene):
+    """Visualizes the pruning of stale connections and the addition of new ones."""
+
     def construct(self):
         title = Text("Connections Optimizer", font_size=40).to_edge(UP)
         subtitle = Text("Prune low-signal follows. Strengthen warm paths.", font_size=20).next_to(title, DOWN)

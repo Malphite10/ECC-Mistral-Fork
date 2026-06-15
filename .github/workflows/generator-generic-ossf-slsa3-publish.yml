@@ -19,6 +19,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
 
@@ -31,10 +34,12 @@ jobs:
       #
       # ========================================================
       - name: Build artifacts
+        id: build
         run: |
             # These are some amazing artifacts.
             echo "artifact1" > artifact1
             echo "artifact2" > artifact2
+            echo "package_file=artifact1" >> "${GITHUB_OUTPUT}"
 
       # ========================================================
       #
@@ -49,10 +54,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # List the artifacts the provenance will refer to.
-          files=$(ls artifact*)
           # Generate the subjects (base64 encoded).
-          echo "hashes=$(sha256sum $files | base64 -w0)" >> "${GITHUB_OUTPUT}"
+          echo "digests=$(sha256sum "${{ steps.build.outputs.package_file }}" | base64 -w0)" >> "${GITHUB_OUTPUT}"
 
   provenance:
     needs: [build]
@@ -60,7 +63,7 @@ jobs:
       actions: read   # To read the workflow path.
       id-token: write # To sign the provenance.
       contents: write # To add assets to a release.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.4.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@68bad40844440577b33778c9f29077a3388838e9 # v1.4.0
     with:
       base64-subjects: "${{ needs.build.outputs.digests }}"
       upload-assets: true # Optional: Upload to a new release

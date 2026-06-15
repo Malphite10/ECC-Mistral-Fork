@@ -17,6 +17,8 @@ from llm.core.types import LLMInput, LLMOutput, Message, ModelInfo, ProviderType
 
 
 class ClaudeProvider(LLMProvider):
+    """Claude provider using the Anthropic API."""
+
     provider_type = ProviderType.CLAUDE
 
     def __init__(self, api_key: str | None = None, base_url: str | None = None) -> None:

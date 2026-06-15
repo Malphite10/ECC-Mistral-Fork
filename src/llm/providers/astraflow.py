@@ -23,6 +23,7 @@ DEFAULT_ASTRAFLOW_MODEL = "gpt-4o-mini"
 
 
 def _parse_tool_arguments(raw_arguments: str | None) -> dict[str, Any]:
+    """Parse tool call arguments from a raw string to a dictionary."""
     if not raw_arguments:
         return {}
 
@@ -37,6 +38,8 @@ def _parse_tool_arguments(raw_arguments: str | None) -> dict[str, Any]:
 
 
 class _AstraflowBaseProvider(LLMProvider):
+    """Base provider for Astraflow/UModelVerse endpoints."""
+
     provider_type: ProviderType
     api_key_env: str
     base_url_env: str

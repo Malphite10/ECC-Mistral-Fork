@@ -15,6 +15,8 @@ from llm.core.types import LLMInput, LLMOutput, Message, ModelInfo, ProviderType
 
 
 class OllamaProvider(LLMProvider):
+    """Ollama provider for running local LLMs."""
+
     provider_type = ProviderType.OLLAMA
 
     def __init__(

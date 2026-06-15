@@ -8,6 +8,7 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
+const INSTALL_TIMEOUT_MS = 300000;
 const REPO_ROOT = path.join(__dirname, '..', '..');
 const INSTALL_SCRIPT = path.join(REPO_ROOT, '.trae', 'install.sh');
 const UNINSTALL_SCRIPT = path.join(REPO_ROOT, '.trae', 'uninstall.sh');
@@ -29,7 +30,7 @@ function runInstall(options = {}) {
     },
     encoding: 'utf8',
     stdio: ['pipe', 'pipe', 'pipe'],
-    timeout: 60000,
+    timeout: INSTALL_TIMEOUT_MS,
   });
 }
 
@@ -43,7 +44,7 @@ function runUninstall(options = {}) {
     encoding: 'utf8',
     input: options.input || 'y\n',
     stdio: ['pipe', 'pipe', 'pipe'],
-    timeout: 60000,
+    timeout: INSTALL_TIMEOUT_MS,
   });
 }
 

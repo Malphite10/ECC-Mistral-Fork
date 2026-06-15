@@ -19,6 +19,8 @@ from llm.providers.constants import EMPTY_FILTERED_RESPONSE_ERROR
 
 
 class OpenAIProvider(LLMProvider):
+    """OpenAI provider using the official OpenAI API."""
+
     provider_type = ProviderType.OPENAI
 
     def __init__(self, api_key: str | None = None, base_url: str | None = None) -> None:

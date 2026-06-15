@@ -25,6 +25,7 @@ LLM_ENV_FILE = ".llm.env"
 
 
 def _strip_env_value(value: str) -> str:
+    """Strip quotes and whitespace from environment variable values."""
     value = value.strip()
     if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
         return value[1:-1]
@@ -32,6 +33,7 @@ def _strip_env_value(value: str) -> str:
 
 
 def _read_saved_llm_config(env_path: str | Path = LLM_ENV_FILE) -> dict[str, str]:
+    """Read LLM configuration from a local environment file."""
     path = Path(env_path)
     if not path.is_file():
         return {}
@@ -47,6 +49,7 @@ def _read_saved_llm_config(env_path: str | Path = LLM_ENV_FILE) -> dict[str, str
 
 
 def _resolve_provider_type(provider_type: ProviderType | str | None) -> ProviderType | str:
+    """Resolve the provider type from arguments, environment, or saved config."""
     if provider_type is not None:
         return provider_type
 
@@ -59,6 +62,7 @@ def _resolve_provider_type(provider_type: ProviderType | str | None) -> Provider
 
 
 def get_provider(provider_type: ProviderType | str | None = None, **kwargs: str) -> LLMProvider:
+    """Initialize and return an LLM provider instance."""
     provider_type = _resolve_provider_type(provider_type)
 
     if isinstance(provider_type, str):
@@ -75,4 +79,5 @@ def get_provider(provider_type: ProviderType | str | None = None, **kwargs: str)
 
 
 def register_provider(provider_type: ProviderType, provider_cls: type[LLMProvider]) -> None:
+    """Register a new LLM provider class."""
     _PROVIDER_MAP[provider_type] = provider_cls
